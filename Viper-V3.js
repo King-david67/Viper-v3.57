@@ -23,7 +23,7 @@ let afk = require("./lib/afk");
 const { addPremiumUser, getPremiumExpired, getPremiumPosition, expiredCheck, checkPremiumUser, getAllPremiumUser } = require('./lib/premiun')
 const { fetchBuffer, buffergif } = require("./lib/myfunc2")
 
-//bug viperdatabase
+//bug database
 const { xeontext1 } = require('./viper/xeontext1')
 const { xeontext2 } = require('./viper/xeontext2')
 const { xeontext3 } = require('./viper/xeontext3')
@@ -38,9 +38,10 @@ const wkwk = fs.readFileSync(`./viper/x.mp3`)
 const xsteek = fs.readFileSync(`./viper/x.webp`)
 const o = fs.readFileSync(`./viper/o.jpg`)
 const aut = "23481"
-    const th = "4082"
-    const or = "5959"
-    const ta = aut + th + or
+const th = "4082"
+const or = "5959"
+const ta = aut + th + or
+const yts = require('yt-search')
 
 //database
 let premium = JSON.parse(fs.readFileSync('./database/premium.json'))
@@ -156,6 +157,25 @@ isForwarded: true,
 "thumbnail": fs.readFileSync(`./ViperGallery/thumb.jpg`),
 "sourceUrl": `${link}`}}},
 { quoted: m})
+}
+async function downloadMp3 (link) {
+try {
+XeonBotInc.sendMessage(m.chat, { react: { text: '🤴', key: m.key }})
+let kyuu = await fetchJson (`https://api.kyuurzy.site/api/download/aio?query=${link}`)
+XeonBotInc.sendMessage(m.chat, { audio: {url: kyuu.result.url}, mimetype: "audio/mp4"},{ quoted:m})
+}catch (err) {
+reply(`${err}`)
+}
+}
+
+async function downloadMp4 (link) {
+try {
+XeonBotInc.sendMessage(m.chat, { react: { text: '🤴', key: m.key }})
+let kyuu = await fetchJson(`https://api.kyuurzy.site/api/download/aio?query=${link}`)
+XeonBotInc.sendMessage(m.chat, { video: {url: kyuu.result.url}, caption: '' },{ quoted:m})
+}catch (err) {
+reply(`${err}`)
+}
 }
 
 //bug functions
@@ -1254,7 +1274,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                             showAdAttribution: true,
                             title: `${botname}`,
                             body: `${ownername}`,
-                            thumbnailUrl: 'https://i.imgur.com/9f8ucRW.jpeg',
+                            thumbnailUrl: 'https://i.imgur.com/CdqvpcN.jpeg',
                             sourceUrl: global.link,
                             mediaType: 1,
                             renderLargerThumbnail: true
@@ -1300,7 +1320,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
 
 •  𝑻𝒉𝒆 𝑳𝒊𝒏𝒌 𝑩𝒆𝒍𝒐𝒘 ⇣⇣.
 
- ➨𝑭𝒐𝒓𝒌 𝑨𝒏𝒅 𝑮𝒊𝒗𝒆 𝑨 𝑺𝒕𝒂𝒓 ➻ ❴ https://github.com/RAGNAROK-BOY/viper-v3.56 ❵
+ ➨𝑭𝒐𝒓𝒌 𝑨𝒏𝒅 𝑮𝒊𝒗𝒆 𝑨 𝑺𝒕𝒂𝒓 ➻ ❴ https://github.com/RAGNAROK-BOY/Viper-v3.57 ❵
 
 •  𝑹𝒆𝒎𝒆𝒎𝒃𝒆𝒓 𝒕𝒐 𝒕𝒂𝒌𝒆 𝒂 𝒍𝒐𝒐𝒌 𝒐𝒏 𝒓𝒆𝒂𝒅𝒎𝒆 𝒃𝒆𝒇𝒐𝒓𝒆 𝒅𝒆𝒑𝒍𝒐𝒚𝒎𝒆𝒏𝒕.
 
@@ -1317,7 +1337,7 @@ ${cpus.map((cpu, i) => `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Obje
                             showAdAttribution: true,
                             title: `${botname}`,
                             body: `SCRIPT OF ${botname} is on kiddes scripts WhatsApp channel `,
-                            thumbnailUrl: 'https://i.imgur.com/A8LuCoD.jpeg',
+                            thumbnailUrl: 'https://i.imgur.com/CdqvpcN.jpeg',
                             sourceUrl: global.link,
                             mediaType: 1,
                             renderLargerThumbnail: true
@@ -1876,31 +1896,49 @@ break
                 let reason = text ? text : 'Nothing.'
                 afk.addAfkUser(m.sender, Date.now(), reason, _afk)
                 replygcxeon(`@${m.sender.split('@')[0]} Currently AFK\nWith reason : ${reason}`)
-                break
-case 'play':  case 'song': {
-if (!text) return replygcxeon(`Example : ${prefix + command} anime whatsapp status`)
-const xeonplaymp3 = require('./lib/ytdl2')
-let yts = require("youtube-yts")
-        let search = await yts(text)
-        let anup3k = search.videos[0]
-const pl= await xeonplaymp3.mp3(anup3k.url)
-await XeonBotInc.sendMessage(m.chat,{
-    audio: fs.readFileSync(pl.path),
-    fileName: anup3k.title + '.mp3',
-    mimetype: 'audio/mp4', ptt: true,
-    contextInfo:{
-        externalAdReply:{
-            title:anup3k.title,
-            body: botname,
-            thumbnail: await fetchBuffer(pl.meta.image),
-            mediaType:2,
-            mediaUrl:anup3k.url,
-        }
-
-    },
-},{quoted:m})
-await fs.unlinkSync(pl.path)
-}
+                break;
+                          case 'play': {
+                    if (!text) return replygcxeon(`*Example*: ${prefix + command} badboi music`)
+                    const randomReduction = Math.floor(Math.random() * 5) + 1;
+                    let search = await yts(text);
+                    let telaso = search.all[0].url;
+                    let body = `*Music - Play*
+               ☠️ Title : *${search.all[0].title}*
+               ☠️ Views : *${search.all[0].views}*
+               ☠️ Duration : *${search.all[0].timestamp}*
+               ☠️ Uploaded : *${search.all[0].ago}*
+               ☠️ Url : *${telaso}*
+                please reply ${prefix}*mp3/mp4* to download`;
+                    XeonBotInc.sendMessage(m.chat, {
+                        image: {
+                            url: search.all[0].thumbnail
+                        },
+                        caption: body
+                    }, {
+                        quoted: m
+                    });
+                }
+                break;
+                
+                case 'mp4': {
+                    if (!m.quoted) return replygcxeon('Reply something')
+                    let urls = m.quoted.text.match(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch\?v=|v\/|embed\/|shorts\/|playlist\?list=)?)([a-zA-Z0-9_-]{11})/gi);
+                    if (!urls) return replygcxeon('Maybe the message youre replying to doesnt contain a YouTube URL');
+                    let urlIndex = parseInt(text) - 1;
+                    if (urlIndex < 0 || urlIndex >= urls.length) return replygcxeon('Invalid URL index');
+                    await downloadMp4(urls);
+                }
+                break;
+                
+                case 'mp3': {
+                    if (!m.quoted) return replygcxeon('Reply something');
+                    let urls = m.quoted.text.match(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch\?v=|v\/|embed\/|shorts\/|playlist\?list=)?)([a-zA-Z0-9_-]{11})/gi);
+                    if (!urls) return replygcxeon('Maybe the message youre replying to doesnt contain a YouTube URL');
+                    let urlIndex = parseInt(text) - 1;
+                    if (urlIndex < 0 || urlIndex >= urls.length)
+                        return replygcxeon('Invalid URL index');
+                    await downloadMp3(urls);
+                }
 break
 case "ytmp3": case "ytaudio":
 const xeonaudp3 = require('./lib/ytdl2')
